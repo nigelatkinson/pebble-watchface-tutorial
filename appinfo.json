@@ -1,0 +1,102 @@
+{
+    "appKeys": {
+        "KEY_CONDITIONS": 1,
+        "KEY_HEADLINE_1": 3,
+        "KEY_HEADLINE_2": 4,
+        "KEY_HEADLINE_3": 5,
+        "KEY_HEADLINE_4": 6,
+        "KEY_HEADLINE_5": 7,
+        "KEY_HEADLINE_6": 8,
+        "KEY_LOCATION": 2,
+        "KEY_TEMPERATURE": 0
+    },
+    "capabilities": [
+        "location"
+    ],
+    "companyName": "nigel@nigelatkinson.com",
+    "enableMultiJS": true,
+    "longName": "Watchface Tutorial",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/no-phone.bmp",
+                "name": "NO_PHONE",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/phone.bmp",
+                "name": "PHONE",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/battery-100.bmp",
+                "name": "BAT_100",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/battery-50.bmp",
+                "name": "BAT_50",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/battery-75.bmp",
+                "name": "BAT_75",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/battery-25.bmp",
+                "name": "BAT_25",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/battery-0.bmp",
+                "name": "BAT_0",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/bt-on.bmp",
+                "name": "BT_ON",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/bt-off.bmp",
+                "name": "BT_OFF",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "compatibility": "2.7",
+                "file": "fonts/fff_tusj.font",
+                "name": "FONT_FFF_TUSJ_24",
+                "targetPlatforms": null,
+                "type": "font"
+            },
+            {
+                "compatibility": "2.7",
+                "file": "fonts/fff_tusj.font",
+                "name": "FONT_FFF_TUSJ_42",
+                "targetPlatforms": null,
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "Face Tutor",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "41b021d7-9729-4d9f-a262-d2151c5e2fdf",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
