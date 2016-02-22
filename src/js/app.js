@@ -1,7 +1,7 @@
 // Listen for when an AppMessage is received
 Pebble.addEventListener('appmessage',
   function(e) {
-    console.log('AppMessage received!');
+    //console.log('AppMessage received!');
     getWeather();
     getNews();
   }
@@ -53,7 +53,7 @@ function locationSuccess(pos) {
       // Send to Pebble
       Pebble.sendAppMessage(dictionary,
         function(e) {
-          console.log('Weather info sent to Pebble successfully!');
+          //console.log('Weather info sent to Pebble successfully!');
         },
         function(e) {
           console.log('Error sending weather info to Pebble!');
@@ -86,7 +86,7 @@ function getWeather() {
  */
 function getNews()
 {
-  console.log("Getting news headlines...")
+  //console.log("Getting news headlines...")
   // Construct URL
   var url = 'http://feeds.bbci.co.uk/news/rss.xml?edition=uk';
 
@@ -124,14 +124,14 @@ function getNews()
         // Send to Pebble
         Pebble.sendAppMessage(dictionary,
           function(e) {
-            console.log('News sent to Pebble successfully!');
+            //console.log('News sent to Pebble successfully!');
           },
           function(e) {
             console.log('Error sending news to Pebble!');
           }
         );
       }else{
-        console.log('No response from url '+url);
+        console.log('Error: No response from url '+url);
       }
     }
   };
@@ -141,7 +141,7 @@ function getNews()
 // Listen for when the watchface is opened
 Pebble.addEventListener('ready', 
   function(e) {
-    console.log('PebbleKit JS ready!');
+    //console.log('PebbleKit JS ready!');
 
     // Get the initial weather
     getWeather();
