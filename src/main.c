@@ -8,8 +8,8 @@
 #define KEY_HEADLINE_5 7
 #define KEY_HEADLINE_6 8
 
-#include <pebble.h>
 #include <math.h>
+#include "updatetime.h"
 
 static Window *s_mainWindow;
 
@@ -36,234 +36,7 @@ static GBitmap *s_bat50IconBmp;
 static GBitmap *s_bat75IconBmp;
 static GBitmap *s_bat100IconBmp;
 
-static char* s_hour_strings[] = {"twelve","one","two","three","four","five","six","seven","eight","nine","ten","eleven"};
-static char* s_min_strings[] = {"o'clock","five past","ten past","quarter past","twenty past","twenty five past","half past","twenty five to","twenty to","quarter to","ten to","five to"};
-static char* s_acc_strings[] = {"coming up to","exactly","just gone"};
-
 static char news_array[6][50];
-
-/**
- * Update the time string displayed on the TextLayer
- */
-static void update_timeish()
-{
-  // Get a tm structure
-  time_t temp = time(NULL);
-  struct tm *tick_time = localtime(&temp);
-
-  static char acc_buffer[13];
-  static char s_buffer[25];
-  
-  // Write the current hours and minutes into a buffer
-  switch(tick_time->tm_min)
-  {
-    case 0:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_hour_strings[(tick_time->tm_hour % 12)],s_min_strings[0]);
-      break;
-    case 1:
-    case 2:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_hour_strings[tick_time->tm_hour % 12],s_min_strings[0]);
-      break;
-    case 3:
-    case 4:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[1], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 5:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[1], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 6:
-    case 7:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[1], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 8:
-    case 9:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[2], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 10:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[2], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 11:
-    case 12:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[2], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 13:
-    case 14:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[3], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 15:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[3], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 16:
-    case 17:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[3], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 18:
-    case 19:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[4], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 20:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[4], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 21:
-    case 22:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[4], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 23:
-    case 24:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[5], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 25:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[5], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 26:
-    case 27:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[5], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 28:
-    case 29:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[6], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 30:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[6], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 31:
-    case 32:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[6], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 33:
-    case 34:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[7], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 35:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[7], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 36:
-    case 37:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[7], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 38:
-    case 39:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[8], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 40:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[8], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 41:
-    case 42:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[8], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 43:
-    case 44:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[9], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 45:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[9], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 46:
-    case 47:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[9], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 48:
-    case 49:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[10], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 50:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[10], s_hour_strings[tick_time->tm_hour % 12]);
-    case 51:
-    case 52:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[10], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 53:
-    case 54:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[11], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 55:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[11], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 56:
-    case 57:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[11], s_hour_strings[tick_time->tm_hour % 12]);
-      break;
-    case 58:
-    case 59:
-      snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_hour_strings[tick_time->tm_hour % 12], s_min_strings[0]);
-      break;
-  }
-  
-  // Display this time on the TextLayer
-  text_layer_set_text(s_timeAccText, acc_buffer);
-  text_layer_set_text(s_timeText, s_buffer);
-}
-
-/**
- * Update the time string displayed on the TextLayer
- */
-static void update_time()
-{
-  // Get a tm structure
-  time_t temp = time(NULL);
-  struct tm *tick_time = localtime(&temp);
-
-  // Write the current hours and minutes into a buffer
-  static char s_buffer[8];
-  strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ?
-                                          "%H:%M" : "%I:%M", tick_time);
-  // Display this time on the TextLayer
-  text_layer_set_text(s_timeText, s_buffer);
-}
-
-/**
- * Update the time string displayed on the TextLayer
- */
-static void update_date()
-{
-  // Get a tm structure
-  time_t temp = time(NULL);
-  struct tm *tick_time = localtime(&temp);
-
-  // Write the current day, month and day of the month into a buffer
-  static char s_buffer[23];
-  strftime(s_buffer, sizeof(s_buffer), "%A %e %B", tick_time);
-
-  // Display this time on the TextLayer
-  text_layer_set_text(s_dateText, s_buffer);
-}
 
 /**
  * Update the bluetooth icon displayed on the BitmapLayer
@@ -327,7 +100,7 @@ static void update_weather(Tuple *temp_tuple, Tuple *conditions_tuple, Tuple *lo
   
   if (temp_tuple && conditions_tuple && location_tuple)
   {
-    snprintf(s_buffer, sizeof(s_buffer), "%s: %s - %s", location_buffer, temperature_buffer, conditions_buffer);
+    snprintf(s_buffer, sizeof(s_buffer), "%s %s %s", location_buffer, temperature_buffer, conditions_buffer);
   } else if (temp_tuple){
     snprintf(s_buffer, sizeof(s_buffer), "%s", temperature_buffer);
   } else if (conditions_tuple){
@@ -404,11 +177,11 @@ void bt_handler(bool connected) {
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 {
   //update_time();
-  update_timeish();
+  update_timeish(s_timeText,s_timeAccText);
   if(tick_time->tm_min == 0)
   {
     APP_LOG(APP_LOG_LEVEL_INFO, "Updating date...");
-    update_date();
+    update_date(s_dateText);
   }
 
   // Get news/weather update every 12 minutes
@@ -590,7 +363,7 @@ static void mainWindowLoad(Window *w)
   text_layer_set_text_color(s_timeText, GColorBlack);
 
   //update_time();
-  update_timeish();
+  update_timeish(s_timeText,s_timeAccText);
   
   //s_timeFont = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_FFF_TUSJ_42));
   s_timeFont = fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK);
@@ -609,7 +382,7 @@ static void mainWindowLoad(Window *w)
   text_layer_set_background_color(s_dateText, GColorClear);
   text_layer_set_text_color(s_dateText, GColorBlack);
 
-  update_date();
+  update_date(s_dateText);
   
   //s_dateFont = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_FFF_TUSJ_24));
   s_dateFont = fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD);
@@ -622,7 +395,7 @@ static void mainWindowLoad(Window *w)
   
   //////////////////////////////////
   // Create the weather text layer
-  s_weatherText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(128, 122), bounds.size.w-4, 14));
+  s_weatherText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(128, 122), bounds.size.w-4, 16));
   
    // Improve the layout to be more like a watchface
   text_layer_set_background_color(s_weatherText, GColorClear);
