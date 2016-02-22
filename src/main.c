@@ -445,9 +445,14 @@ static void mainWindowUnload(Window *w)
   // destroy GBitmaps
   gbitmap_destroy(s_btOnIconBmp);
   gbitmap_destroy(s_btOffIconBmp);
+  gbitmap_destroy(s_bat0IconBmp);
+  gbitmap_destroy(s_bat25IconBmp);
+  gbitmap_destroy(s_bat50IconBmp);
+  gbitmap_destroy(s_bat75IconBmp);
+  gbitmap_destroy(s_bat100IconBmp);
   // Unload GFont
-  fonts_unload_custom_font(s_timeFont);
-  fonts_unload_custom_font(s_dateFont);
+  //fonts_unload_custom_font(s_timeFont);
+  //fonts_unload_custom_font(s_dateFont);
 }
 
 /**
