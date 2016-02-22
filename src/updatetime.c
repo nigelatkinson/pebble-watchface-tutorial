@@ -115,76 +115,77 @@ void update_timeish(TextLayer *s_timeText, TextLayer *s_timeAccText)
     case 33:
     case 34:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[7], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[7], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 35:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[7], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[7], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 36:
     case 37:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[7], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[7], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 38:
     case 39:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[8], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[8], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 40:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[8], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[8], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 41:
     case 42:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[8], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[8], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 43:
     case 44:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[9], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[9], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 45:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[9], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[9], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 46:
     case 47:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[9], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[9], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 48:
     case 49:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[10], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[10], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 50:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[10], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[10], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
+      break;
     case 51:
     case 52:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[10], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[10], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 53:
     case 54:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[11], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[11], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 55:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[1]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[11], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[11], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 56:
     case 57:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[2]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[11], s_hour_strings[tick_time->tm_hour % 12]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_min_strings[11], s_hour_strings[(tick_time->tm_hour + 1) % 12]);
       break;
     case 58:
     case 59:
       snprintf(acc_buffer,sizeof(acc_buffer),"%s",s_acc_strings[0]);
-      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_hour_strings[tick_time->tm_hour % 12], s_min_strings[0]);
+      snprintf(s_buffer,sizeof(s_buffer),"%s\n%s",s_hour_strings[(tick_time->tm_hour + 1) % 12], s_min_strings[0]);
       break;
   }
   

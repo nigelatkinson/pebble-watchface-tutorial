@@ -60,32 +60,6 @@
                 "name": "BAT_0",
                 "targetPlatforms": null,
                 "type": "bitmap"
-            },
-            {
-                "file": "images/bt-on.bmp",
-                "name": "BT_ON",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "file": "images/bt-off.bmp",
-                "name": "BT_OFF",
-                "targetPlatforms": null,
-                "type": "bitmap"
-            },
-            {
-                "compatibility": "2.7",
-                "file": "fonts/fff_tusj.font",
-                "name": "FONT_FFF_TUSJ_24",
-                "targetPlatforms": null,
-                "type": "font"
-            },
-            {
-                "compatibility": "2.7",
-                "file": "fonts/fff_tusj.font",
-                "name": "FONT_FFF_TUSJ_42",
-                "targetPlatforms": null,
-                "type": "font"
             }
         ]
     },

@@ -340,14 +340,14 @@ static void mainWindowLoad(Window *w)
   // Create the time text layers
   
   // time accuracy text layer
-  s_timeAccText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(6, 2), 84, 22));
+  s_timeAccText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(2, -2), 94, 28));
   
   // Improve the layout to be more like a watchface
   text_layer_set_background_color(s_timeAccText, GColorClear);
   text_layer_set_text_color(s_timeAccText, GColorBlack);
   
   //s_timeFont = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_FFF_TUSJ_42));
-  s_timeFont = fonts_get_system_font(FONT_KEY_GOTHIC_18);
+  s_timeFont = fonts_get_system_font(FONT_KEY_GOTHIC_24);
   
   text_layer_set_font(s_timeAccText, s_timeFont);
   text_layer_set_text_alignment(s_timeAccText, GTextAlignmentLeft);
