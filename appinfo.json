@@ -13,58 +13,58 @@
     "capabilities": [
         "location"
     ],
-    "companyName": "nigel@nigelatkinson.com",
+    "companyName": "Nigel",
     "enableMultiJS": true,
-    "longName": "Watchface Tutorial",
+    "longName": "Timeish+",
     "projectType": "native",
     "resources": {
         "media": [
             {
-                "file": "images/no-phone.bmp",
-                "name": "NO_PHONE",
+                "file": "images/phone-white.bmp",
+                "name": "PHONE_WHITE",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
-                "file": "images/phone.bmp",
-                "name": "PHONE",
+                "file": "images/battery-charging-white.bmp",
+                "name": "BATTERY_CHARGE_WHITE",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
-                "file": "images/battery-100.bmp",
-                "name": "BAT_100",
+                "file": "images/battery-100-white.bmp",
+                "name": "BATTERY_100_WHITE",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
-                "file": "images/battery-50.bmp",
-                "name": "BAT_50",
+                "file": "images/battery-75-white.bmp",
+                "name": "BATTERY_75_WHITE",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
-                "file": "images/battery-75.bmp",
-                "name": "BAT_75",
+                "file": "images/battery-50-white.bmp",
+                "name": "BATTERY_50_WHITE",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
-                "file": "images/battery-25.bmp",
-                "name": "BAT_25",
+                "file": "images/battery-25-white.bmp",
+                "name": "BATTERY_25_WHITE",
                 "targetPlatforms": null,
                 "type": "bitmap"
             },
             {
-                "file": "images/battery-0.bmp",
-                "name": "BAT_0",
+                "file": "images/battery-0-white.bmp",
+                "name": "BATTERY_0_WHITE",
                 "targetPlatforms": null,
                 "type": "bitmap"
             }
         ]
     },
     "sdkVersion": "3",
-    "shortName": "Face Tutor",
+    "shortName": "Timeish+",
     "targetPlatforms": [
         "basalt"
     ],

@@ -14,13 +14,25 @@ static TextLayer *s_timeText;
 static TextLayer *s_timeAccText;
 static TextLayer *s_dateText;
 
+// Colours
+#define POWER_ICON_BACK_COLOR GColorClear
+#define BT_ICON_BACK_COLOR GColorClear
+#define TIME_TEXT_BACK_COLOR GColorClear
+#define TIME_TEXT_FORE_COLOR GColorWhite
+#define WINDOW_BACK_COLOR GColorBlack
+
 /**
  * Tick timer handler
  */
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed)
-{
-  //update_time();
+{ 
+  // Render news/weather first to prevent clipping of 3rd line of time
+  
+  //APP_LOG(APP_LOG_LEVEL_INFO, "Updating displayed news story...");
+  display_news_weather();
+  
   update_timeish(s_timeText,s_timeAccText);
+  
   if(tick_time->tm_min == 0)
   {
     APP_LOG(APP_LOG_LEVEL_INFO, "Updating date...");
@@ -32,9 +44,6 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   {
     request_news_weather_data();
   }
-  
-  //APP_LOG(APP_LOG_LEVEL_INFO, "Updating displayed news story...");
-  update_news();
 }
 
 /**
@@ -54,10 +63,10 @@ static void mainWindowLoad(Window *w)
   GRect iconBounds = get_battery_icon_bounds();
   
   // Create BitmapLayer to display the GBitmap
-  s_powerIconLayer = bitmap_layer_create(GRect(bounds.size.w-iconBounds.size.w, 0, iconBounds.size.w, iconBounds.size.h));
+  s_powerIconLayer = bitmap_layer_create(GRect(bounds.size.w-(iconBounds.size.w+2), 0, iconBounds.size.w, iconBounds.size.h));
 
   // set background colout and compositing mode 
-  bitmap_layer_set_background_color(s_powerIconLayer, GColorClear);
+  bitmap_layer_set_background_color(s_powerIconLayer, POWER_ICON_BACK_COLOR);
   bitmap_layer_set_compositing_mode(s_powerIconLayer, GCompOpSet);
   
   update_power_status(battery_state_service_peek());
@@ -71,10 +80,10 @@ static void mainWindowLoad(Window *w)
   iconBounds = get_bt_icon_bounds();
   
   // Create BitmapLayer to display the GBitmap
-  s_btIconLayer = bitmap_layer_create(GRect(88, 0, iconBounds.size.w, iconBounds.size.h));
+  s_btIconLayer = bitmap_layer_create(GRect(90, 0, iconBounds.size.w, iconBounds.size.h));
 
   // set background colout and compositing mode 
-  bitmap_layer_set_background_color(s_btIconLayer, GColorClear);
+  bitmap_layer_set_background_color(s_btIconLayer, BT_ICON_BACK_COLOR);
   bitmap_layer_set_compositing_mode(s_btIconLayer, GCompOpSet);
   
   update_bt_status(connection_service_peek_pebble_app_connection());
@@ -89,8 +98,8 @@ static void mainWindowLoad(Window *w)
   s_timeAccText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(2, -2), 94, 28));
   
   // Improve the layout to be more like a watchface
-  text_layer_set_background_color(s_timeAccText, GColorClear);
-  text_layer_set_text_color(s_timeAccText, GColorBlack);
+  text_layer_set_background_color(s_timeAccText, TIME_TEXT_BACK_COLOR);
+  text_layer_set_text_color(s_timeAccText, TIME_TEXT_FORE_COLOR);
   
   //s_timeFont = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_FFF_TUSJ_42));
   GFont timeFont = fonts_get_system_font(FONT_KEY_GOTHIC_24);
@@ -105,8 +114,8 @@ static void mainWindowLoad(Window *w)
   s_timeText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(22, 18), bounds.size.w-4, 90));
   
   // Improve the layout to be more like a watchface
-  text_layer_set_background_color(s_timeText, GColorClear);
-  text_layer_set_text_color(s_timeText, GColorBlack);
+  text_layer_set_background_color(s_timeText, TIME_TEXT_BACK_COLOR);
+  text_layer_set_text_color(s_timeText, TIME_TEXT_FORE_COLOR);
 
   //update_time();
   update_timeish(s_timeText,s_timeAccText);
@@ -125,8 +134,8 @@ static void mainWindowLoad(Window *w)
   s_dateText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(128, 122), bounds.size.w-4, 16));
   
    // Improve the layout to be more like a watchface
-  text_layer_set_background_color(s_dateText, GColorClear);
-  text_layer_set_text_color(s_dateText, GColorBlack);
+  text_layer_set_background_color(s_dateText, TIME_TEXT_BACK_COLOR);
+  text_layer_set_text_color(s_dateText, TIME_TEXT_FORE_COLOR);
 
   update_date(s_dateText);
   
@@ -144,8 +153,8 @@ static void mainWindowLoad(Window *w)
   s_weatherText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(112, 108), bounds.size.w-4, 18));
   
    // Improve the layout to be more like a watchface
-  text_layer_set_background_color(s_weatherText, GColorClear);
-  text_layer_set_text_color(s_weatherText, GColorBlack);
+  text_layer_set_background_color(s_weatherText, TIME_TEXT_BACK_COLOR);
+  text_layer_set_text_color(s_weatherText, TIME_TEXT_FORE_COLOR);
 
   update_weather((Tuple *)NULL,(Tuple *)NULL, (Tuple *)NULL);
   
@@ -162,10 +171,10 @@ static void mainWindowLoad(Window *w)
   s_newsText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(142, 136), bounds.size.w-4, 30));
   
    // Improve the layout to be more like a watchface
-  text_layer_set_background_color(s_newsText, GColorClear);
-  text_layer_set_text_color(s_newsText, GColorBlack);
+  text_layer_set_background_color(s_newsText, TIME_TEXT_BACK_COLOR);
+  text_layer_set_text_color(s_newsText, TIME_TEXT_FORE_COLOR);
 
-  update_news();
+  display_news_weather();
   
   text_layer_set_font(s_newsText, weatherFont);
   text_layer_set_text_alignment(s_newsText, GTextAlignmentLeft);
@@ -219,7 +228,7 @@ static void init()
   });
   
   // set background colour
-  window_set_background_color(s_mainWindow, GColorWhite);
+  window_set_background_color(s_mainWindow, WINDOW_BACK_COLOR);
   
   // display window
   window_stack_push(s_mainWindow, true);

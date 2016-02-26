@@ -2,21 +2,20 @@
 #include "newsweather.h"
 
 static char s_news_array[6][50];
+static char s_weather[26];
 
 TextLayer *s_weatherText;
 TextLayer *s_newsText;
 
 /**
- * Update the weather info
+ * Update the weather info buffer
  */
 void update_weather(Tuple *temp_tuple, Tuple *conditions_tuple, Tuple *location_tuple)
 {
-  // Write the weather into a buffer
-  static char s_buffer[26] = "No weather data";
   // Store incoming information
-  static char temperature_buffer[6];
-  static char conditions_buffer[16];
-  static char location_buffer[16];
+  char temperature_buffer[6];
+  char conditions_buffer[16];
+  char location_buffer[16];
   
   if (temp_tuple)
   {
@@ -35,20 +34,20 @@ void update_weather(Tuple *temp_tuple, Tuple *conditions_tuple, Tuple *location_
   
   if (temp_tuple && conditions_tuple && location_tuple)
   {
-    snprintf(s_buffer, sizeof(s_buffer), "%s %s %s", location_buffer, temperature_buffer, conditions_buffer);
+    snprintf(s_weather, sizeof(s_weather), "%s %s %s", location_buffer, temperature_buffer, conditions_buffer);
   } else if (temp_tuple){
-    snprintf(s_buffer, sizeof(s_buffer), "%s", temperature_buffer);
+    snprintf(s_weather, sizeof(s_weather), "%s", temperature_buffer);
   } else if (conditions_tuple){
-    snprintf(s_buffer, sizeof(s_buffer), "%s", conditions_buffer);
+    snprintf(s_weather, sizeof(s_weather), "%s", conditions_buffer);
+  } else {
+    snprintf(s_weather, sizeof(s_weather), "%s", "No weather data");
   }
-  // Display this weather on the TextLayer
-  text_layer_set_text(s_weatherText, s_buffer);
 }
 
 /**
- * Update the news headline
+ * Display the news and weather
  */
-void update_news()
+void display_news_weather()
 {
   // Write the news into a buffer
   static char s_buffer[50] = "Loading news...";
@@ -63,8 +62,11 @@ void update_news()
     snprintf(s_buffer, sizeof(s_buffer), "%s", s_news_array[news_ctr]);
   }
   
-  // Display this weather on the TextLayer
+  // Display this news on the TextLayer
   text_layer_set_text(s_newsText, s_buffer);
+  
+  // Display the weather on the TextLayer
+  text_layer_set_text(s_weatherText, s_weather);
 }
 
 /**
@@ -116,7 +118,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     }
   }
   
-  update_news();
+  display_news_weather();
 }
 
 /**

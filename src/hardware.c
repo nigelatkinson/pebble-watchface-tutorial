@@ -2,7 +2,7 @@
 
 // Bluetooth bitmaps
 static GBitmap *s_btOnIconBmp;
-static GBitmap *s_btOffIconBmp;
+//static GBitmap *s_btOffIconBmp;
 
 // Battery bitmaps
 static GBitmap *s_bat0IconBmp;
@@ -40,9 +40,11 @@ void update_bt_status(bool connected)
  // Set the bitmap onto the layer and add to the window
   if (connected)
   {
+    layer_set_hidden((Layer *)s_btIconLayer,false);
     bitmap_layer_set_bitmap(s_btIconLayer, s_btOnIconBmp);
   } else {
-    bitmap_layer_set_bitmap(s_btIconLayer, s_btOffIconBmp);
+    layer_set_hidden((Layer *)s_btIconLayer,true);
+    //bitmap_layer_set_bitmap(s_btIconLayer, s_btOffIconBmp);
   }
 }
 
@@ -88,7 +90,7 @@ void handle_bt(bool connected)
     APP_LOG(APP_LOG_LEVEL_INFO, "Phone is connected!");
     // double double
     vibes_double_pulse();
-    psleep(250);
+    psleep(1000);
     vibes_double_pulse();
   } else {
     APP_LOG(APP_LOG_LEVEL_INFO, "Phone is not connected!");
@@ -126,16 +128,16 @@ void destroy_hardware_handlers()
 void init_hardware_icons()
 {
   // Create GBitmaps
-  s_bat0IconBmp = gbitmap_create_with_resource(RESOURCE_ID_BAT_0);
-  s_bat25IconBmp = gbitmap_create_with_resource(RESOURCE_ID_BAT_25);
-  s_bat50IconBmp = gbitmap_create_with_resource(RESOURCE_ID_BAT_50);
-  s_bat75IconBmp = gbitmap_create_with_resource(RESOURCE_ID_BAT_75);
-  s_bat100IconBmp = gbitmap_create_with_resource(RESOURCE_ID_BAT_100);
-  s_batChargeIconBmp = gbitmap_create_with_resource(RESOURCE_ID_BAT_100);
+  s_bat0IconBmp = gbitmap_create_with_resource(RESOURCE_ID_BATTERY_0_WHITE);
+  s_bat25IconBmp = gbitmap_create_with_resource(RESOURCE_ID_BATTERY_25_WHITE);
+  s_bat50IconBmp = gbitmap_create_with_resource(RESOURCE_ID_BATTERY_50_WHITE);
+  s_bat75IconBmp = gbitmap_create_with_resource(RESOURCE_ID_BATTERY_75_WHITE);
+  s_bat100IconBmp = gbitmap_create_with_resource(RESOURCE_ID_BATTERY_100_WHITE);
+  s_batChargeIconBmp = gbitmap_create_with_resource(RESOURCE_ID_BATTERY_CHARGE_WHITE);
   
   // Create GBitmaps
-  s_btOnIconBmp = gbitmap_create_with_resource(RESOURCE_ID_PHONE);
-  s_btOffIconBmp = gbitmap_create_with_resource(RESOURCE_ID_NO_PHONE);
+  s_btOnIconBmp = gbitmap_create_with_resource(RESOURCE_ID_PHONE_WHITE);
+  //s_btOffIconBmp = gbitmap_create_with_resource(RESOURCE_ID_NO_PHONE);
 }
 
 /**
@@ -145,7 +147,7 @@ void destroy_hardware_icons()
 {
   // destroy GBitmaps
   gbitmap_destroy(s_btOnIconBmp);
-  gbitmap_destroy(s_btOffIconBmp);
+//  gbitmap_destroy(s_btOffIconBmp);
   gbitmap_destroy(s_bat0IconBmp);
   gbitmap_destroy(s_bat25IconBmp);
   gbitmap_destroy(s_bat50IconBmp);

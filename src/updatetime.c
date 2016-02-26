@@ -4,6 +4,9 @@ static const char* s_hour_strings[] = {"twelve","one","two","three","four","five
 static const char* s_min_strings[] = {"o'clock","five past","ten past","quarter past","twenty past","twenty five past","half past","twenty five to","twenty to","quarter to","ten to","five to"};
 static const char* s_acc_strings[] = {"coming up to","exactly","just gone"};
 
+static char acc_buffer[13];
+static char s_buffer[25];
+
 /**
  * Update the time string displayed on the TextLayer
  */
@@ -13,9 +16,6 @@ void update_timeish(TextLayer *s_timeText, TextLayer *s_timeAccText)
   time_t temp = time(NULL);
   struct tm *tick_time = localtime(&temp);
 
-  static char acc_buffer[13];
-  static char s_buffer[25];
-  
   // Write the current hours and minutes into a buffer
   switch(tick_time->tm_min)
   {

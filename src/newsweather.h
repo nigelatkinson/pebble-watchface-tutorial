@@ -24,7 +24,7 @@ void update_weather(Tuple *temp_tuple, Tuple *conditions_tuple, Tuple *location_
 /**
  * Update the news headlines
  */
-void update_news(void);
+void display_news_weather(void);
 
 /**
  *  Send data request message
