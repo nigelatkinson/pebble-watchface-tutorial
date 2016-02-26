@@ -80,7 +80,7 @@ static void mainWindowLoad(Window *w)
   iconBounds = get_bt_icon_bounds();
   
   // Create BitmapLayer to display the GBitmap
-  s_btIconLayer = bitmap_layer_create(GRect(90, 0, iconBounds.size.w, iconBounds.size.h));
+  s_btIconLayer = bitmap_layer_create(GRect(94, 4, iconBounds.size.w, iconBounds.size.h));
 
   // set background colout and compositing mode 
   bitmap_layer_set_background_color(s_btIconLayer, BT_ICON_BACK_COLOR);
@@ -95,7 +95,7 @@ static void mainWindowLoad(Window *w)
   // Create the time text layers
   
   // time accuracy text layer
-  s_timeAccText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(2, -2), 94, 28));
+  s_timeAccText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(-2, -6), 94, 28));
   
   // Improve the layout to be more like a watchface
   text_layer_set_background_color(s_timeAccText, TIME_TEXT_BACK_COLOR);
