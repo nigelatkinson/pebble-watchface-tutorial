@@ -1,11 +1,21 @@
 #include "updatetime.h"
 
-static const char* s_hour_strings[] = {"twelve","one","two","three","four","five","six","seven","eight","nine","ten","eleven"};
-static const char* s_min_strings[] = {"o'clock","five past","ten past","quarter past","twenty past","twenty five past","half past","twenty five to","twenty to","quarter to","ten to","five to"};
-static const char* s_acc_strings[] = {"coming up to","exactly","just gone"};
+static const char s_hour_strings[][7] = {"twelve","one","two","three","four","five",
+                                       "six","seven","eight","nine","ten","eleven"};
+static const char s_min_strings[][17] = {"o'clock","five past","ten past","quarter past",
+                                      "twenty past","twenty five past","half past",
+                                      "twenty five to","twenty to","quarter to","ten to","five to"};
+static const char s_acc_strings[][13] = {"coming up to","exactly","just gone"};
+static const char s_wday_name[][10] = {
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+};
+static const char s_mon_name[][10] = {
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+};
 
 static char acc_buffer[13];
-static char s_buffer[25];
+static char s_buffer[24];
 
 /**
  * Update the time string displayed on the TextLayer
@@ -219,10 +229,13 @@ void update_date(TextLayer *s_dateText)
   // Get a tm structure
   time_t temp = time(NULL);
   struct tm *tick_time = localtime(&temp);
-
+  
   // Write the current day, month and day of the month into a buffer
   static char s_buffer[23];
-  strftime(s_buffer, sizeof(s_buffer), "%A %e %B", tick_time);
+  
+  // Reimplement strftime because it isn't possible to print day of month without padding!
+  //strftime(s_buffer, sizeof(s_buffer), "%A %e %B", tick_time);
+  snprintf(s_buffer, sizeof(s_buffer), "%s %d %s", s_wday_name[tick_time->tm_wday], tick_time->tm_mday, s_mon_name[tick_time->tm_mon]);
 
   // Display this time on the TextLayer
   text_layer_set_text(s_dateText, s_buffer);

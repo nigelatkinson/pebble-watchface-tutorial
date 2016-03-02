@@ -32,6 +32,11 @@ void display_news_weather(void);
 void request_news_weather_data(void);
 
 /**
+ *  Send data request message
+ */
+void request_weather_data(void);
+
+/**
  *  Init the news and weather subsystem
  */
 void init_news_weather(void);

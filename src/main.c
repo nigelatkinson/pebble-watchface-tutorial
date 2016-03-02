@@ -18,8 +18,13 @@ static TextLayer *s_dateText;
 #define POWER_ICON_BACK_COLOR GColorClear
 #define BT_ICON_BACK_COLOR GColorClear
 #define TIME_TEXT_BACK_COLOR GColorClear
-#define TIME_TEXT_FORE_COLOR GColorWhite
-#define WINDOW_BACK_COLOR GColorBlack
+#define TIME_TEXT_FORE_COLOR GColorElectricBlue 
+#define WINDOW_BACK_COLOR GColorOxfordBlue
+
+#define SLEEPY_TIME_START_HOUR 1
+#define SLEEPY_TIME_END_HOUR 6
+
+#define NEWS_WEATHER_UPDATE_PERIOD_MINS 12
 
 /**
  * Tick timer handler
@@ -33,16 +38,20 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   
   update_timeish(s_timeText,s_timeAccText);
   
+  // update the date on the hour
   if(tick_time->tm_min == 0)
   {
-    APP_LOG(APP_LOG_LEVEL_INFO, "Updating date...");
+    //APP_LOG(APP_LOG_LEVEL_INFO, "Updating date...");
     update_date(s_dateText);
   }
 
-  // Get news/weather update every 12 minutes
-  if(tick_time->tm_min % 12 == 0)
+  // Get news/weather update every 12 minutes outside sleepy time
+  if((tick_time->tm_hour > SLEEPY_TIME_END_HOUR || tick_time->tm_hour > SLEEPY_TIME_START_HOUR) &&
+     tick_time->tm_min % NEWS_WEATHER_UPDATE_PERIOD_MINS == 0)
   {
     request_news_weather_data();
+    // refresh time to prevent clipping of third line
+    update_timeish(s_timeText,s_timeAccText);
   }
 }
 
@@ -60,10 +69,11 @@ static void mainWindowLoad(Window *w)
   //////////////////////////////////////////
   // Battery
   
-  GRect iconBounds = get_battery_icon_bounds();
+  GRect bat_icon_bounds = get_battery_icon_bounds();
   
   // Create BitmapLayer to display the GBitmap
-  s_powerIconLayer = bitmap_layer_create(GRect(bounds.size.w-(iconBounds.size.w+2), 0, iconBounds.size.w, iconBounds.size.h));
+  s_powerIconLayer = bitmap_layer_create(GRect(bounds.size.w - (bat_icon_bounds.size.w + 2),
+                                               0, bat_icon_bounds.size.w, bat_icon_bounds.size.h));
 
   // set background colout and compositing mode 
   bitmap_layer_set_background_color(s_powerIconLayer, POWER_ICON_BACK_COLOR);
@@ -77,10 +87,10 @@ static void mainWindowLoad(Window *w)
   //////////////////////////////////////////
   // BT connection
 
-  iconBounds = get_bt_icon_bounds();
+  GRect bt_icon_bounds = get_bt_icon_bounds();
   
   // Create BitmapLayer to display the GBitmap
-  s_btIconLayer = bitmap_layer_create(GRect(94, 4, iconBounds.size.w, iconBounds.size.h));
+  s_btIconLayer = bitmap_layer_create(GRect(bounds.size.w - (bat_icon_bounds.size.w + bt_icon_bounds.size.w + 4), 4, bt_icon_bounds.size.w, bt_icon_bounds.size.h));
 
   // set background colout and compositing mode 
   bitmap_layer_set_background_color(s_btIconLayer, BT_ICON_BACK_COLOR);
@@ -111,7 +121,7 @@ static void mainWindowLoad(Window *w)
   layer_add_child(windowLayer, text_layer_get_layer(s_timeAccText));
     
   // time text layer
-  s_timeText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(22, 18), bounds.size.w-4, 90));
+  s_timeText = text_layer_create(GRect(2, PBL_IF_ROUND_ELSE(20, 16), bounds.size.w-4, 100));
   
   // Improve the layout to be more like a watchface
   text_layer_set_background_color(s_timeText, TIME_TEXT_BACK_COLOR);

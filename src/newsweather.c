@@ -1,8 +1,11 @@
 #include <pebble.h>
 #include "newsweather.h"
 
-static char s_news_array[6][50];
+#define NEWS_ARRAY_SIZE 6
+
+static char s_news_array[NEWS_ARRAY_SIZE][50];
 static char s_weather[26];
+static int s_weather_misses = 0;
 
 TextLayer *s_weatherText;
 TextLayer *s_newsText;
@@ -12,7 +15,7 @@ TextLayer *s_newsText;
  */
 void update_weather(Tuple *temp_tuple, Tuple *conditions_tuple, Tuple *location_tuple)
 {
-  // Store incoming information
+  // Store incoming data
   char temperature_buffer[6];
   char conditions_buffer[16];
   char location_buffer[16];
@@ -34,13 +37,17 @@ void update_weather(Tuple *temp_tuple, Tuple *conditions_tuple, Tuple *location_
   
   if (temp_tuple && conditions_tuple && location_tuple)
   {
+    s_weather_misses = 0;
     snprintf(s_weather, sizeof(s_weather), "%s %s %s", location_buffer, temperature_buffer, conditions_buffer);
-  } else if (temp_tuple){
-    snprintf(s_weather, sizeof(s_weather), "%s", temperature_buffer);
-  } else if (conditions_tuple){
-    snprintf(s_weather, sizeof(s_weather), "%s", conditions_buffer);
   } else {
-    snprintf(s_weather, sizeof(s_weather), "%s", "No weather data");
+    if (s_weather_misses++ > 3)
+    {
+      snprintf(s_weather, sizeof(s_weather), "%s", "No weather data");
+    }
+    else
+    {
+      request_weather_data();
+    }
   }
 }
 
@@ -55,11 +62,15 @@ void display_news_weather()
  // Get a tm structure
   time_t temp = time(NULL);
   struct tm *tick_time = localtime(&temp); 
-  int news_ctr = tick_time->tm_min % 6;
+  int news_ctr = tick_time->tm_min % NEWS_ARRAY_SIZE;
   
   if (s_news_array[news_ctr] && strlen(s_news_array[news_ctr]) > 0)
   { 
     snprintf(s_buffer, sizeof(s_buffer), "%s", s_news_array[news_ctr]);
+  }
+  else
+  {
+    APP_LOG(APP_LOG_LEVEL_INFO, "No news headline in array");
   }
   
   // Display this news on the TextLayer
@@ -72,9 +83,28 @@ void display_news_weather()
 /**
  *  Send data request message
  */
+void request_weather_data()
+{
+  //APP_LOG(APP_LOG_LEVEL_INFO, "Fetching updated news and weather...");
+  // Begin dictionary
+  DictionaryIterator *iter;
+  app_message_outbox_begin(&iter);
+
+  // Add a key-value pair
+  dict_write_uint8(iter, 0, 0);
+  dict_write_uint8(iter, 1, 0);
+  dict_write_uint8(iter, 2, 0);
+
+  // Send the message!
+  app_message_outbox_send();
+}
+
+/**
+ *  Send data request message
+ */
 void request_news_weather_data()
 {
-  APP_LOG(APP_LOG_LEVEL_INFO, "Fetching updated news and weather...");
+  //APP_LOG(APP_LOG_LEVEL_INFO, "Fetching updated news and weather...");
   // Begin dictionary
   DictionaryIterator *iter;
   app_message_outbox_begin(&iter);
@@ -99,7 +129,7 @@ void request_news_weather_data()
  */
 static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 { 
-  APP_LOG(APP_LOG_LEVEL_INFO, "Handling inbox received callback...");
+  //APP_LOG(APP_LOG_LEVEL_INFO, "Handling inbox received callback...");
   // Read tuples for data
   Tuple *temp_tuple = dict_find(iterator, KEY_TEMPERATURE);
   Tuple *conditions_tuple = dict_find(iterator, KEY_CONDITIONS);
@@ -107,14 +137,21 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   
   update_weather(temp_tuple, conditions_tuple, location_tuple);
   
-  Tuple *headline;
+  // News if its there
+  //if (dict_find(iterator, KEY_HEADLINE_1))
+  //{
+  Tuple *headline = dict_find(iterator, KEY_HEADLINE_1);
   
-  // Assumption here is that KEY_HEADLINE_1 - KEY_HEADLINE_6 are contiguous
-  for (int i = KEY_HEADLINE_1;i <= KEY_HEADLINE_6; i++)
-  {
-    headline = dict_find(iterator, i);
-    if (headline){
-      strncpy(s_news_array[i - KEY_HEADLINE_1],headline->value->cstring,sizeof(s_news_array[i - KEY_HEADLINE_1]));
+  if (headline)
+  {  
+    strncpy(s_news_array[0],headline->value->cstring,sizeof(s_news_array[0]));
+    // Assumption here is that KEY_HEADLINE_1 - KEY_HEADLINE_6 are contiguous
+    for (int i = KEY_HEADLINE_2;i <= KEY_HEADLINE_6; i++)
+    {
+      headline = dict_find(iterator, i);
+      if (headline){
+        strncpy(s_news_array[i - KEY_HEADLINE_1],headline->value->cstring,sizeof(s_news_array[i - KEY_HEADLINE_1]));
+      }
     }
   }
   
@@ -144,7 +181,7 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
 void init_news_weather()
 {
     // init news array
-  for (int i = 0; i < 6; i++)
+  for (int i = 0; i < NEWS_ARRAY_SIZE; i++)
   {
     strncpy(s_news_array[i],"",sizeof(s_news_array[i]));
   }
