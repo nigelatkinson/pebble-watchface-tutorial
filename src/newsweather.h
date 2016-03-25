@@ -17,6 +17,11 @@ extern TextLayer *s_weatherText;
 extern TextLayer *s_newsText;
 
 /**
+ * Get the temperature in degrees celsius
+ */
+int get_temperature(void);
+
+/**
  * Update the weather info
  */
 void update_weather(Tuple *temp_tuple, Tuple *conditions_tuple, Tuple *location_tuple);

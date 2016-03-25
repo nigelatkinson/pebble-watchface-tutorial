@@ -7,11 +7,21 @@ Pebble.addEventListener('appmessage',
   }
 );
 
+function requestFailed(evt) {
+  console.log("An error occurred while requesting news/weather.");
+}
+
+function requestCanceled(evt) {
+  console.log("News/weather request was aborted.");
+}
+
 var xhrRequest = function (url, type, callback) {
   var xhr = new XMLHttpRequest();
   xhr.onload = function () {
     callback(this.responseText);
   };
+  xhr.addEventListener("error", requestFailed);
+  xhr.addEventListener("abort", requestCanceled);
   xhr.open(type, url);
   xhr.send();
 };
@@ -59,8 +69,10 @@ function locationSuccess(pos) {
           console.log('Error sending weather info to Pebble!');
         }
       );
+      
     }      
   );
+  
 }
 
 /**
@@ -91,6 +103,8 @@ function getNews()
   var url = 'http://feeds.bbci.co.uk/news/rss.xml?edition=uk';
 
   var x = new XMLHttpRequest();
+  x.addEventListener("error", requestFailed);
+  x.addEventListener("abort", requestCanceled);
   x.open("GET", url, true);
   x.setRequestHeader("Cache-Control", "no-cache");
   x.setRequestHeader("Pragma", "no-cache");
@@ -107,7 +121,7 @@ function getNews()
         // Extract max 6 headlines
         while ((titles[i] = matchHeadlineRegexp.exec(x.responseText)) && i < 7)
         {
-            console.log(titles[i][1]);
+            //console.log(titles[i][1]);
             i++;
         }
       

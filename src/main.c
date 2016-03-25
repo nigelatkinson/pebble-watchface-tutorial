@@ -18,11 +18,18 @@ static TextLayer *s_dateText;
 #define POWER_ICON_BACK_COLOR GColorClear
 #define BT_ICON_BACK_COLOR GColorClear
 #define TIME_TEXT_BACK_COLOR GColorClear
-#define TIME_TEXT_FORE_COLOR GColorElectricBlue 
+#define TIME_TEXT_FORE_COLOR_DAY GColorWhite
+#define TIME_TEXT_FORE_COLOR_NIGHT GColorElectricBlue
+#define WEATHER_TEXT_FORE_COLOR_WARM GColorYellow
+#define WEATHER_TEXT_FORE_COLOR_COLD GColorVeryLightBlue
+#define WEATHER_TEXT_FORE_COLOR_HOT GColorRajah
+#define TIME_TEXT_FORE_COLOR TIME_TEXT_FORE_COLOR_NIGHT
 #define WINDOW_BACK_COLOR GColorOxfordBlue
 
-#define SLEEPY_TIME_START_HOUR 1
+#define SLEEPY_TIME_START_HOUR 0
 #define SLEEPY_TIME_END_HOUR 6
+
+static bool s_is_sleepy_time;
 
 #define NEWS_WEATHER_UPDATE_PERIOD_MINS 12
 
@@ -31,8 +38,20 @@ static TextLayer *s_dateText;
  */
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 { 
-  // Render news/weather first to prevent clipping of 3rd line of time
+  s_is_sleepy_time = (tick_time->tm_hour <= SLEEPY_TIME_END_HOUR && tick_time->tm_hour >= SLEEPY_TIME_START_HOUR);
   
+  if (s_is_sleepy_time)
+  {
+    text_layer_set_text_color(s_timeAccText, TIME_TEXT_FORE_COLOR_NIGHT);
+    text_layer_set_text_color(s_timeText, TIME_TEXT_FORE_COLOR_NIGHT);
+    text_layer_set_text_color(s_dateText, TIME_TEXT_FORE_COLOR_NIGHT);
+    text_layer_set_text_color(s_newsText, TIME_TEXT_FORE_COLOR_NIGHT);
+  } else {
+    text_layer_set_text_color(s_timeAccText, TIME_TEXT_FORE_COLOR_DAY);
+    text_layer_set_text_color(s_timeText, TIME_TEXT_FORE_COLOR_DAY);
+    text_layer_set_text_color(s_dateText, TIME_TEXT_FORE_COLOR_DAY);
+    text_layer_set_text_color(s_newsText, TIME_TEXT_FORE_COLOR_DAY);
+  }
   //APP_LOG(APP_LOG_LEVEL_INFO, "Updating displayed news story...");
   display_news_weather();
   
@@ -46,10 +65,21 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   }
 
   // Get news/weather update every 12 minutes outside sleepy time
-  if((tick_time->tm_hour > SLEEPY_TIME_END_HOUR || tick_time->tm_hour > SLEEPY_TIME_START_HOUR) &&
-     tick_time->tm_min % NEWS_WEATHER_UPDATE_PERIOD_MINS == 0)
+  if(!s_is_sleepy_time && (tick_time->tm_min % NEWS_WEATHER_UPDATE_PERIOD_MINS == 0))
   {
     request_news_weather_data();
+    
+    // Set weather text colour
+    int temp = get_temperature();
+    if (temp < 10)
+    {
+      text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_COLD);
+    } else if (temp > 25) {
+      text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_HOT);
+    } else {
+      text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_WARM);
+    }
+    
     // refresh time to prevent clipping of third line
     update_timeish(s_timeText,s_timeAccText);
   }
@@ -164,7 +194,7 @@ static void mainWindowLoad(Window *w)
   
    // Improve the layout to be more like a watchface
   text_layer_set_background_color(s_weatherText, TIME_TEXT_BACK_COLOR);
-  text_layer_set_text_color(s_weatherText, TIME_TEXT_FORE_COLOR);
+  text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_WARM);
 
   update_weather((Tuple *)NULL,(Tuple *)NULL, (Tuple *)NULL);
   

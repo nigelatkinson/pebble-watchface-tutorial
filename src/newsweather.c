@@ -6,9 +6,18 @@
 static char s_news_array[NEWS_ARRAY_SIZE][50];
 static char s_weather[26];
 static int s_weather_misses = 0;
+static int s_temp;
 
 TextLayer *s_weatherText;
 TextLayer *s_newsText;
+
+/**
+ * Get the temperature in degrees celsius
+ */
+int get_temperature()
+{
+  return s_temp;
+}
 
 /**
  * Update the weather info buffer
@@ -22,7 +31,8 @@ void update_weather(Tuple *temp_tuple, Tuple *conditions_tuple, Tuple *location_
   
   if (temp_tuple)
   {
-    snprintf(temperature_buffer, sizeof(temperature_buffer), "%d°C", (int)temp_tuple->value->int32);
+    s_temp = (int)temp_tuple->value->int32;
+    snprintf(temperature_buffer, sizeof(temperature_buffer), "%d°C", s_temp);
   }
   
   if (conditions_tuple)
@@ -85,18 +95,23 @@ void display_news_weather()
  */
 void request_weather_data()
 {
-  //APP_LOG(APP_LOG_LEVEL_INFO, "Fetching updated news and weather...");
-  // Begin dictionary
-  DictionaryIterator *iter;
-  app_message_outbox_begin(&iter);
-
-  // Add a key-value pair
-  dict_write_uint8(iter, 0, 0);
-  dict_write_uint8(iter, 1, 0);
-  dict_write_uint8(iter, 2, 0);
-
-  // Send the message!
-  app_message_outbox_send();
+  if (connection_service_peek_pebble_app_connection())
+  {
+    //APP_LOG(APP_LOG_LEVEL_INFO, "Fetching updated news and weather...");
+    // Begin dictionary
+    DictionaryIterator *iter;
+    app_message_outbox_begin(&iter);
+  
+    // Add a key-value pair
+    dict_write_uint8(iter, 0, 0);
+    dict_write_uint8(iter, 1, 0);
+    dict_write_uint8(iter, 2, 0);
+  
+    // Send the message!
+    app_message_outbox_send();
+  } else {
+    display_news_weather();
+  }
 }
 
 /**
@@ -104,24 +119,29 @@ void request_weather_data()
  */
 void request_news_weather_data()
 {
-  //APP_LOG(APP_LOG_LEVEL_INFO, "Fetching updated news and weather...");
-  // Begin dictionary
-  DictionaryIterator *iter;
-  app_message_outbox_begin(&iter);
-
-  // Add a key-value pair
-  dict_write_uint8(iter, 0, 0);
-  dict_write_uint8(iter, 1, 0);
-  dict_write_uint8(iter, 2, 0);
-  dict_write_uint8(iter, 3, 0);
-  dict_write_uint8(iter, 4, 0);
-  dict_write_uint8(iter, 5, 0);
-  dict_write_uint8(iter, 6, 0);
-  dict_write_uint8(iter, 7, 0);
-  dict_write_uint8(iter, 8, 0);
-
-  // Send the message!
-  app_message_outbox_send();
+  if (connection_service_peek_pebble_app_connection())
+  {
+    //APP_LOG(APP_LOG_LEVEL_INFO, "Fetching updated news and weather...");
+    // Begin dictionary
+    DictionaryIterator *iter;
+    app_message_outbox_begin(&iter);
+  
+    // Add a key-value pair
+    dict_write_uint8(iter, 0, 0);
+    dict_write_uint8(iter, 1, 0);
+    dict_write_uint8(iter, 2, 0);
+    dict_write_uint8(iter, 3, 0);
+    dict_write_uint8(iter, 4, 0);
+    dict_write_uint8(iter, 5, 0);
+    dict_write_uint8(iter, 6, 0);
+    dict_write_uint8(iter, 7, 0);
+    dict_write_uint8(iter, 8, 0);
+  
+    // Send the message!
+    app_message_outbox_send();
+  } else {
+    display_news_weather();
+  }
 }
 
 /**
@@ -138,8 +158,6 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   update_weather(temp_tuple, conditions_tuple, location_tuple);
   
   // News if its there
-  //if (dict_find(iterator, KEY_HEADLINE_1))
-  //{
   Tuple *headline = dict_find(iterator, KEY_HEADLINE_1);
   
   if (headline)
