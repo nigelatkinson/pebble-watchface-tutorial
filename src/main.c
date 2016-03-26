@@ -33,6 +33,20 @@ static bool s_is_sleepy_time;
 
 #define NEWS_WEATHER_UPDATE_PERIOD_MINS 12
 
+void set_weather_text_colour()
+{
+    // Set weather text colour
+    int temp = get_temperature();
+    if (temp < 10)
+    {
+      text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_COLD);
+    } else if (temp > 25) {
+      text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_HOT);
+    } else {
+      text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_WARM);
+    }
+}
+
 /**
  * Tick timer handler
  */
@@ -70,15 +84,7 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed)
     request_news_weather_data();
     
     // Set weather text colour
-    int temp = get_temperature();
-    if (temp < 10)
-    {
-      text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_COLD);
-    } else if (temp > 25) {
-      text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_HOT);
-    } else {
-      text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_WARM);
-    }
+    set_weather_text_colour();
     
     // refresh time to prevent clipping of third line
     update_timeish(s_timeText,s_timeAccText);
@@ -194,7 +200,7 @@ static void mainWindowLoad(Window *w)
   
    // Improve the layout to be more like a watchface
   text_layer_set_background_color(s_weatherText, TIME_TEXT_BACK_COLOR);
-  text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_WARM);
+  //text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_WARM);
 
   update_weather((Tuple *)NULL,(Tuple *)NULL, (Tuple *)NULL);
   
@@ -202,6 +208,9 @@ static void mainWindowLoad(Window *w)
   
   text_layer_set_font(s_weatherText, weatherFont);
   text_layer_set_text_alignment(s_weatherText, GTextAlignmentLeft);
+  
+  // Set weather text colour
+  set_weather_text_colour();
 
   // Add it as a child layer to the Window's root layer
   layer_add_child(windowLayer, text_layer_get_layer(s_weatherText));
