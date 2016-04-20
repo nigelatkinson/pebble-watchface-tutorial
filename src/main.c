@@ -163,7 +163,6 @@ static void mainWindowLoad(Window *w)
   text_layer_set_background_color(s_timeText, TIME_TEXT_BACK_COLOR);
   text_layer_set_text_color(s_timeText, TIME_TEXT_FORE_COLOR);
 
-  //update_time();
   update_timeish(s_timeText,s_timeAccText);
   
   //s_timeFont = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_FFF_TUSJ_42));

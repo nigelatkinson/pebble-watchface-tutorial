@@ -12,7 +12,35 @@ static GBitmap *s_bat75IconBmp;
 static GBitmap *s_bat100IconBmp;
 static GBitmap *s_batChargeIconBmp;
 
-// Bitmap layers
+// Vibe patterns
+#define MICRO_DOT 50
+#define MICRO_GAP 100
+
+// Length of a Morse Code "dot" in milliseconds
+#define DOT 200
+// Length of a Morse Code "dash" in milliseconds
+#define DASH 500
+// Length of Gap Between dots/dashes
+#define SHORT_GAP 200
+// Length of Gap Between Letters
+#define MEDIUM_GAP 500
+// Length of Gap Between Words
+#define LONG_GAP 1000
+
+//static const uint32_t connected_segments[] = { DOT, SHORT_GAP, DOT };
+static const uint32_t connected_segments[] = { MICRO_DOT, SHORT_GAP, DASH };
+static VibePattern s_phoneConnected = {
+  .durations = connected_segments,
+  .num_segments = ARRAY_LENGTH(connected_segments),
+};
+static const uint32_t disconnected_segments[] = { DASH, SHORT_GAP, MICRO_DOT };
+//static const uint32_t disconnected_segments[] = { DASH, SHORT_GAP, DASH };
+static VibePattern s_phoneDisconnected = {
+  .durations = disconnected_segments,
+  .num_segments = ARRAY_LENGTH(disconnected_segments),
+};
+
+// Bitmap layers (delcared extern in hardware.h)
 BitmapLayer *s_btIconLayer;
 BitmapLayer *s_powerIconLayer;
 
@@ -87,14 +115,19 @@ void handle_battery(BatteryChargeState charge_state)
 void handle_bt(bool connected)
 {
   if (connected) {
-    APP_LOG(APP_LOG_LEVEL_INFO, "Phone is connected!");
+    //APP_LOG(APP_LOG_LEVEL_INFO, "Phone is connected!");
     // double double
-    vibes_double_pulse();
+    
+    /*vibes_double_pulse();
     psleep(1000);
-    vibes_double_pulse();
+    vibes_double_pulse();*/
+    vibes_cancel();
+    vibes_enqueue_custom_pattern(s_phoneConnected);
   } else {
-    APP_LOG(APP_LOG_LEVEL_INFO, "Phone is not connected!");
-    vibes_double_pulse();
+    //APP_LOG(APP_LOG_LEVEL_INFO, "Phone is not connected!");
+    //vibes_double_pulse();
+    vibes_cancel();
+    vibes_enqueue_custom_pattern(s_phoneDisconnected);
   }
   update_bt_status(connected);
 }
@@ -138,6 +171,7 @@ void init_hardware_icons()
   // Create GBitmaps
   s_btOnIconBmp = gbitmap_create_with_resource(RESOURCE_ID_PHONE_WHITE);
   //s_btOffIconBmp = gbitmap_create_with_resource(RESOURCE_ID_NO_PHONE);
+    
 }
 
 /**
