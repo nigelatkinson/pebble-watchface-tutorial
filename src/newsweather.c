@@ -77,9 +77,7 @@ void display_news_weather()
   if (s_news_array[news_ctr] && strlen(s_news_array[news_ctr]) > 0)
   { 
     snprintf(s_buffer, sizeof(s_buffer), "%s", s_news_array[news_ctr]);
-  }
-  else
-  {
+  } else {
     APP_LOG(APP_LOG_LEVEL_INFO, "No news headline in array");
   }
   

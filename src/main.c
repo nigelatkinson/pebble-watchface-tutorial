@@ -23,7 +23,6 @@ static TextLayer *s_dateText;
 #define WEATHER_TEXT_FORE_COLOR_WARM GColorYellow
 #define WEATHER_TEXT_FORE_COLOR_COLD GColorVeryLightBlue
 #define WEATHER_TEXT_FORE_COLOR_HOT GColorRajah
-#define TIME_TEXT_FORE_COLOR TIME_TEXT_FORE_COLOR_NIGHT
 #define WINDOW_BACK_COLOR GColorOxfordBlue
 
 #define SLEEPY_TIME_START_HOUR 0
@@ -54,25 +53,20 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 { 
   s_is_sleepy_time = (tick_time->tm_hour <= SLEEPY_TIME_END_HOUR && tick_time->tm_hour >= SLEEPY_TIME_START_HOUR);
   
-  if (s_is_sleepy_time)
-  {
-    text_layer_set_text_color(s_timeAccText, TIME_TEXT_FORE_COLOR_NIGHT);
-    text_layer_set_text_color(s_timeText, TIME_TEXT_FORE_COLOR_NIGHT);
-    text_layer_set_text_color(s_dateText, TIME_TEXT_FORE_COLOR_NIGHT);
-    text_layer_set_text_color(s_newsText, TIME_TEXT_FORE_COLOR_NIGHT);
-  } else {
-    text_layer_set_text_color(s_timeAccText, TIME_TEXT_FORE_COLOR_DAY);
-    text_layer_set_text_color(s_timeText, TIME_TEXT_FORE_COLOR_DAY);
-    text_layer_set_text_color(s_dateText, TIME_TEXT_FORE_COLOR_DAY);
-    text_layer_set_text_color(s_newsText, TIME_TEXT_FORE_COLOR_DAY);
-  }
+  text_layer_set_text_color(s_timeAccText, (s_is_sleepy_time ? TIME_TEXT_FORE_COLOR_NIGHT : TIME_TEXT_FORE_COLOR_DAY));
+  text_layer_set_text_color(s_timeText, (s_is_sleepy_time ? TIME_TEXT_FORE_COLOR_NIGHT : TIME_TEXT_FORE_COLOR_DAY));
+  text_layer_set_text_color(s_dateText, (s_is_sleepy_time ? TIME_TEXT_FORE_COLOR_NIGHT : TIME_TEXT_FORE_COLOR_DAY));
+  text_layer_set_text_color(s_newsText, (s_is_sleepy_time ? TIME_TEXT_FORE_COLOR_NIGHT : TIME_TEXT_FORE_COLOR_DAY));
+
   //APP_LOG(APP_LOG_LEVEL_INFO, "Updating displayed news story...");
   display_news_weather();
+  // Set weather text colour
+  set_weather_text_colour();
   
   update_timeish(s_timeText,s_timeAccText);
   
   // update the date on the hour
-  if(tick_time->tm_min == 0)
+  if(units_changed == DAY_UNIT)
   {
     //APP_LOG(APP_LOG_LEVEL_INFO, "Updating date...");
     update_date(s_dateText);
@@ -82,9 +76,6 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   if(!s_is_sleepy_time && (tick_time->tm_min % NEWS_WEATHER_UPDATE_PERIOD_MINS == 0))
   {
     request_news_weather_data();
-    
-    // Set weather text colour
-    set_weather_text_colour();
     
     // refresh time to prevent clipping of third line
     update_timeish(s_timeText,s_timeAccText);
@@ -101,6 +92,11 @@ static void mainWindowLoad(Window *w)
   // Get information about the root window
   Layer *windowLayer = window_get_root_layer(w);
   GRect bounds = layer_get_bounds(windowLayer);
+  
+  // Set sleepy time flag
+  time_t temp_time = time(NULL);
+  struct tm *cur_time = localtime(&temp_time); 
+  s_is_sleepy_time = (cur_time->tm_hour <= SLEEPY_TIME_END_HOUR && cur_time->tm_hour >= SLEEPY_TIME_START_HOUR);
   
   //////////////////////////////////////////
   // Battery
@@ -145,7 +141,7 @@ static void mainWindowLoad(Window *w)
   
   // Improve the layout to be more like a watchface
   text_layer_set_background_color(s_timeAccText, TIME_TEXT_BACK_COLOR);
-  text_layer_set_text_color(s_timeAccText, TIME_TEXT_FORE_COLOR);
+  text_layer_set_text_color(s_timeAccText, (s_is_sleepy_time ? TIME_TEXT_FORE_COLOR_NIGHT : TIME_TEXT_FORE_COLOR_DAY));
   
   //s_timeFont = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_FFF_TUSJ_42));
   GFont timeFont = fonts_get_system_font(FONT_KEY_GOTHIC_24);
@@ -161,7 +157,7 @@ static void mainWindowLoad(Window *w)
   
   // Improve the layout to be more like a watchface
   text_layer_set_background_color(s_timeText, TIME_TEXT_BACK_COLOR);
-  text_layer_set_text_color(s_timeText, TIME_TEXT_FORE_COLOR);
+  text_layer_set_text_color(s_timeText, (s_is_sleepy_time ? TIME_TEXT_FORE_COLOR_NIGHT : TIME_TEXT_FORE_COLOR_DAY));
 
   update_timeish(s_timeText,s_timeAccText);
   
@@ -180,7 +176,7 @@ static void mainWindowLoad(Window *w)
   
    // Improve the layout to be more like a watchface
   text_layer_set_background_color(s_dateText, TIME_TEXT_BACK_COLOR);
-  text_layer_set_text_color(s_dateText, TIME_TEXT_FORE_COLOR);
+  text_layer_set_text_color(s_dateText, (s_is_sleepy_time ? TIME_TEXT_FORE_COLOR_NIGHT : TIME_TEXT_FORE_COLOR_DAY));
 
   update_date(s_dateText);
   
@@ -199,7 +195,6 @@ static void mainWindowLoad(Window *w)
   
    // Improve the layout to be more like a watchface
   text_layer_set_background_color(s_weatherText, TIME_TEXT_BACK_COLOR);
-  //text_layer_set_text_color(s_weatherText, WEATHER_TEXT_FORE_COLOR_WARM);
 
   update_weather((Tuple *)NULL,(Tuple *)NULL, (Tuple *)NULL);
   
@@ -220,7 +215,7 @@ static void mainWindowLoad(Window *w)
   
    // Improve the layout to be more like a watchface
   text_layer_set_background_color(s_newsText, TIME_TEXT_BACK_COLOR);
-  text_layer_set_text_color(s_newsText, TIME_TEXT_FORE_COLOR);
+  text_layer_set_text_color(s_newsText, (s_is_sleepy_time ? TIME_TEXT_FORE_COLOR_NIGHT : TIME_TEXT_FORE_COLOR_DAY));
 
   display_news_weather();
   
