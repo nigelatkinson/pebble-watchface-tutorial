@@ -65,7 +65,7 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   
   update_timeish(s_timeText,s_timeAccText);
   
-  // update the date on the hour
+  // update the date on the day change
   if(units_changed == DAY_UNIT)
   {
     //APP_LOG(APP_LOG_LEVEL_INFO, "Updating date...");

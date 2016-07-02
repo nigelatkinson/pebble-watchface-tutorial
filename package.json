@@ -1,0 +1,86 @@
+{
+    "author": "Nigel",
+    "dependencies": {},
+    "keywords": [],
+    "name": "timeish",
+    "pebble": {
+        "capabilities": [
+            "location"
+        ],
+        "displayName": "Timeish+",
+        "enableMultiJS": true,
+        "messageKeys": {
+            "KEY_CONDITIONS": 1,
+            "KEY_HEADLINE_1": 3,
+            "KEY_HEADLINE_2": 4,
+            "KEY_HEADLINE_3": 5,
+            "KEY_HEADLINE_4": 6,
+            "KEY_HEADLINE_5": 7,
+            "KEY_HEADLINE_6": 8,
+            "KEY_LOCATION": 2,
+            "KEY_TEMPERATURE": 0
+        },
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/screenshot.png",
+                    "name": "screenshot",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/phone-white.bmp",
+                    "name": "PHONE_WHITE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery-charging-white.bmp",
+                    "name": "BATTERY_CHARGE_WHITE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery-100-white.bmp",
+                    "name": "BATTERY_100_WHITE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery-75-white.bmp",
+                    "name": "BATTERY_75_WHITE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery-50-white.bmp",
+                    "name": "BATTERY_50_WHITE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery-25-white.bmp",
+                    "name": "BATTERY_25_WHITE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/battery-0-white.bmp",
+                    "name": "BATTERY_0_WHITE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "basalt"
+        ],
+        "uuid": "41b021d7-9729-4d9f-a262-d2151c5e2fdf",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "1.0.0"
+}

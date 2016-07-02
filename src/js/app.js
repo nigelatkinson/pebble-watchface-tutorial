@@ -114,7 +114,7 @@ function getNews()
       if (x.responseText !== null)
       {
         //console.log(x.responseText);
-        var matchHeadlineRegexp = /<item>\s*<title>(.*)<\/title>/g;
+        var matchHeadlineRegexp = /<item>\s*<title><!\[CDATA\[(.*)\]\]><\/title>/g;
         var titles = new Array();
         var i = 1;
         
